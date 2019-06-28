@@ -12,7 +12,7 @@ router.get("/", function(req, res, next) {
 
 // POST /api/messages
 router.post("/", function(req, res, next) {
-  //console.log(req.body);
+  console.log(req.body);
   // We don't have proper users yet (we'll get there soon, though!).
   // Instead, we'll findOrCreate an author by name, for simplicity.
   // Of course, you wouldn't want to do this in a real chat app!

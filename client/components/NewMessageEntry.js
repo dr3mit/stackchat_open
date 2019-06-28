@@ -28,8 +28,7 @@ export default class NewMessageEntry extends Component {
     event.preventDefault();
     const content = this.state.newMessage;
     const channelId = this.props.channelId;
-    const name = this.state.newMessage.name;
-    const data = { content, channelId, name };
+    const data = { content, channelId };
     store.dispatch(postMessage(data));
   }
 

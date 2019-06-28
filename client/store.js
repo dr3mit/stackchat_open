@@ -30,8 +30,7 @@ const reducer = (state = intialState, action) => {
     case GOT_NEW_MESSAGE_FROM_SERVER:
       return {
         ...state,
-        messages: [...state.messages, action.message],
-        newMessage: ""
+        messages: [...state.messages, action.message]
       };
     case NAME_CHANGE:
       return {
@@ -91,7 +90,7 @@ export const postMessage = data => {
     Axios.post("/api/messages", {
       content: data.content,
       channelId: data.channelId,
-      name: data.name
+      name: store.getState().name
     })
       .then(res => res.data)
       .then(message => {

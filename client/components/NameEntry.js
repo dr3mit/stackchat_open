@@ -23,6 +23,10 @@ export default class NameEntry extends Component {
     store.dispatch(nameChange(event.target.value));
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
   render() {
     return (
       <form className="form-inline">
