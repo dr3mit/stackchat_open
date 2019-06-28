@@ -1,14 +1,19 @@
 import { applyMiddleware, createStore } from "redux";
 import loggerMiddleware from "redux-logger";
+import thunkMiddleware from "redux-thunk";
+import Axios from "axios";
+import socket from "../client/socket";
 
 const intialState = {
   messages: [],
-  newMessage: ""
+  newMessage: "",
+  name: ""
 };
 
 const GOT_MESSAGES_FROM_SERVER = "GOT_MESSAGES_FROM_SERVER";
 const NEW_MESSAGE = "NEW_MESSAGE";
 const GOT_NEW_MESSAGE_FROM_SERVER = "GOT_NEW_MESSAGE_FROM_SERVER";
+const NAME_CHANGE = "NAME_CHANGE";
 
 const reducer = (state = intialState, action) => {
   switch (action.type) {
@@ -28,13 +33,21 @@ const reducer = (state = intialState, action) => {
         messages: [...state.messages, action.message],
         newMessage: ""
       };
+    case NAME_CHANGE:
+      return {
+        ...state,
+        name: action.name
+      };
     default:
       return state;
   }
 };
 
 //must be below reducer definition
-const store = createStore(reducer, applyMiddleware(loggerMiddleware));
+const store = createStore(
+  reducer,
+  applyMiddleware(loggerMiddleware, thunkMiddleware)
+);
 
 export const gotMessagesFromServer = messages => {
   return {
@@ -54,6 +67,38 @@ export const gotNewMessageFromServer = message => {
   return {
     type: GOT_NEW_MESSAGE_FROM_SERVER,
     message: message
+  };
+};
+
+export const nameChange = name => {
+  return {
+    type: NAME_CHANGE,
+    name: name
+  };
+};
+
+export const fetchMessages = () => {
+  return (dispatch, getState) => {
+    Axios.get("/api/messages")
+      .then(res => res.data)
+      .then(messages => dispatch(gotMessagesFromServer(messages)))
+      .catch(e => console.error(e));
+  };
+};
+
+export const postMessage = data => {
+  return dispatch => {
+    Axios.post("/api/messages", {
+      content: data.content,
+      channelId: data.channelId,
+      name: data.name
+    })
+      .then(res => res.data)
+      .then(message => {
+        dispatch(gotNewMessageFromServer(message));
+        socket.emit("new-message", message);
+      })
+      .catch(error => console.log(error));
   };
 };
 

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Message from "./Message";
 import NewMessageEntry from "./NewMessageEntry";
-import Axios from "axios";
-import store, { gotMessagesFromServer } from "../store";
+import store, { fetchMessages } from "../store";
 export default class MessagesList extends Component {
   constructor() {
     super();
@@ -10,11 +9,7 @@ export default class MessagesList extends Component {
   }
 
   componentDidMount() {
-    Axios.get("/api/messages")
-      .then(res => res.data)
-      .then(messages => store.dispatch(gotMessagesFromServer(messages)))
-      .catch(e => console.error(e));
-
+    store.dispatch(fetchMessages());
     this.unsub = store.subscribe(() => {
       this.setState(store.getState());
     });
