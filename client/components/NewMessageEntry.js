@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import store, { postMessage, writeMessage } from '../store';
+import React, { Component } from "react";
+import { store, postMessage, writeMessage } from "../store";
 
 export default class NewMessageEntry extends Component {
-
-  constructor () {
+  constructor() {
     super();
     this.state = store.getState();
 
@@ -11,19 +10,19 @@ export default class NewMessageEntry extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.unsubscribe = store.subscribe(() => this.setState(store.getState()));
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.unsubscribe();
   }
 
-  handleChange (evt) {
-    store.dispatch(writeMessage(evt.target.value))
+  handleChange(evt) {
+    store.dispatch(writeMessage(evt.target.value));
   }
 
-  handleSubmit (evt) {
+  handleSubmit(evt) {
     evt.preventDefault();
 
     const { name, newMessageEntry } = this.state;
@@ -31,10 +30,10 @@ export default class NewMessageEntry extends Component {
     const { channelId } = this.props;
 
     store.dispatch(postMessage({ name, content, channelId }));
-    store.dispatch(writeMessage(''));
+    store.dispatch(writeMessage(""));
   }
 
-  render () {
+  render() {
     return (
       <form id="new-message-form" onSubmit={this.handleSubmit}>
         <div className="input-group input-group-lg">
@@ -47,7 +46,9 @@ export default class NewMessageEntry extends Component {
             placeholder="Say something nice..."
           />
           <span className="input-group-btn">
-            <button className="btn btn-default" type="submit">Chat!</button>
+            <button className="btn btn-default" type="submit">
+              Chat!
+            </button>
           </span>
         </div>
       </form>
